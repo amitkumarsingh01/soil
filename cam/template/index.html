@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-CAM Video Stream</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: black;
+            color: white;
+        }
+        video {
+            width: 100%;
+            height: auto;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay></video>
+    <button onclick="controlLed('on')">LED ON</button>
+    <button onclick="controlLed('off')">LED OFF</button>
+
+    <script>
+        const video = document.getElementById('video');
+        video.src = "/video_feed";
+        video.type = "video/mp4";
+
+        function controlLed(action) {
+            fetch('/led', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=${action}`
+            });
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowUp') {
+                controlLed('brightness_up');
+            } else if (event.key === 'ArrowDown') {
+                controlLed('brightness_down');
+            }
+        });
+    </script>
+</body>
+</html>
