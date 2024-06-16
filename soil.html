@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Moisture Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-4 text-brown-900">Soil Moisture Data</h1>
+
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full border-collapse border border-brown-900">
+                <thead>
+                    <tr class="bg-brown-600 text-black">
+                        <th class="px-4 py-2">Timestamp</th>
+                        <th class="px-4 py-2">Soil Moisture 1</th>
+                        <th class="px-4 py-2">Soil Moisture 2</th>
+                        <th class="px-4 py-2">Soil Moisture 3</th>
+                    </tr>
+                </thead>
+                <tbody id="data-container">
+                    <!-- Data rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Fetch and display data using JavaScript -->
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('http://192.168.156.176:5000');
+                const data = await response.json();
+
+                const container = document.getElementById('data-container');
+                container.innerHTML = '';  // Clear previous data
+
+                data.reverse().forEach(entry => {
+                    const timestamp = entry.timestamp;  // Use timestamp from server
+                    const moisture1 = entry.soil_moisture1;
+                    const moisture2 = entry.soil_moisture2;
+                    const moisture3 = entry.soil_moisture3;
+
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white';
+
+                    row.innerHTML = `
+                        <td class="border px-4 py-2">${timestamp}</td>
+                        <td class="border px-4 py-2">${moisture1}</td>
+                        <td class="border px-4 py-2">${moisture2}</td>
+                        <td class="border px-4 py-2">${moisture3}</td>
+                    `;
+
+                    container.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
+    </script>
+</body>
+
+</html>
