@@ -3,53 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32-CAM Video Stream</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: black;
-            color: white;
+    <title>ESP32-CAM Control</title>
+    <script>
+        function toggleLed() {
+            fetch('/toggle_led', { method: 'POST' });
         }
-        video {
-            width: 100%;
-            height: auto;
+
+        function increaseBrightness() {
+            fetch('/increase_brightness', { method: 'POST' });
         }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
+
+        function decreaseBrightness() {
+            fetch('/decrease_brightness', { method: 'POST' });
         }
-    </style>
+    </script>
 </head>
 <body>
-    <video id="video" autoplay></video>
-    <button onclick="controlLed('on')">LED ON</button>
-    <button onclick="controlLed('off')">LED OFF</button>
-
-    <script>
-        const video = document.getElementById('video');
-        video.src = "/video_feed";
-        video.type = "video/mp4";
-
-        function controlLed(action) {
-            fetch('/led', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=${action}`
-            });
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'ArrowUp') {
-                controlLed('brightness_up');
-            } else if (event.key === 'ArrowDown') {
-                controlLed('brightness_down');
-            }
-        });
-    </script>
+    <h1>ESP32-CAM Control</h1>
+    <label>LED Control:</label>
+    <button onclick="toggleLed()">Toggle LED</button><br><br>
+    <label>Brightness Control:</label><br>
+    <button onclick="increaseBrightness()">Increase Brightness</button><br>
+    <button onclick="decreaseBrightness()">Decrease Brightness</button><br>
 </body>
 </html>

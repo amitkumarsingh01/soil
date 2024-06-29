@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motor Control</title>
+    <style>
+        #controller {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button {
+            width: 100px;
+            height: 50px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #directions {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('keydown', function(event) {
+                let direction;
+                switch(event.key) {
+                    case 'ArrowUp':
+                        direction = 'forward';
+                        break;
+                    case 'ArrowDown':
+                        direction = 'backward';
+                        break;
+                    case 'ArrowLeft':
+                        direction = 'left';
+                        break;
+                    case 'ArrowRight':
+                        direction = 'right';
+                        break;
+                    case ' ':
+                        direction = 'stop';
+                        break;
+                    case 'Tab':
+                        direction = 'increase_speed';
+                        event.preventDefault();
+                        break;
+                    case 'Shift':
+                        direction = 'decrease_speed';
+                        break;
+                    default:
+                        return;
+                }
+                fetch('/move', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `direction=${direction}`
+                });
+            });
+
+            document.addEventListener('keyup', function(event) {
+                let direction;
+                switch(event.key) {
+                    case 'ArrowUp':
+                    case 'ArrowDown':
+                    case 'ArrowLeft':
+                    case 'ArrowRight':
+                        direction = 'stop';
+                        break;
+                    default:
+                        return;
+                }
+                fetch('/move', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `direction=stop`
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="controller">
+        <h1>Motor Control</h1>
+        <div id="directions">
+            <button class="button" onclick="move('forward')">Forward</button>
+        </div>
+        <div id="directions">
+            <button class="button" onclick="move('left')">Left</button>
+            <button class="button" onclick="move('stop')">Stop</button>
+            <button class="button" onclick="move('right')">Right</button>
+        </div>
+        <div id="directions">
+            <button class="button" onclick="move('backward')">Backward</button>
+        </div>
+        <div>
+            <input type="range" min="0" max="1023" value="614" id="speedSlider" oninput="adjustSpeed(this.value)">
+        </div>
+    </div>
+
+    <script>
+        function move(direction) {
+            fetch('/move', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `direction=${direction}`
+            });
+        }
+
+        function adjustSpeed(value) {
+            fetch('/speed', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=set_speed&value=${value}`
+            });
+        }
+    </script>
+</body>
+</html>
