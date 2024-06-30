@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-ESP32_IP = 'http://192.168.206.228/'  # Replace with the actual IP address of your ESP32
+ESP32_IP = 'http://192.168.145.248/'  # Replace with the actual IP address of your ESP32
 
 @app.route('/')
 def index():
