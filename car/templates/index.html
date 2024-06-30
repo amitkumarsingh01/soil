@@ -21,6 +21,9 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let speed = 0.7 * 1023;
+            const speedSlider = document.getElementById('speedSlider');
+
             document.addEventListener('keydown', function(event) {
                 let direction;
                 switch(event.key) {
@@ -39,12 +42,14 @@
                     case ' ':
                         direction = 'stop';
                         break;
-                    case 'Tab':
-                        direction = 'increase_speed';
-                        event.preventDefault();
-                        break;
                     case 'Shift':
-                        direction = 'decrease_speed';
+                        speed = Math.min(1023, speed + 51); // Increase speed by 5%
+                        adjustSpeed(speed);
+                        break;
+                    case 'Tab':
+                        speed = Math.max(0, speed - 51); // Decrease speed by 5%
+                        adjustSpeed(speed);
+                        event.preventDefault();
                         break;
                     default:
                         return;
@@ -78,6 +83,22 @@
                     body: `direction=stop`
                 });
             });
+
+            speedSlider.addEventListener('input', function() {
+                adjustSpeed(this.value);
+            });
+
+            speedSlider.value = speed; // Initialize speed slider
+
+            function adjustSpeed(value) {
+                fetch('/speed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=set_speed&value=${value}`
+                });
+            }
         });
     </script>
 </head>
@@ -96,30 +117,8 @@
             <button class="button" onclick="move('backward')">Backward</button>
         </div>
         <div>
-            <input type="range" min="0" max="1023" value="614" id="speedSlider" oninput="adjustSpeed(this.value)">
+            <input type="range" min="0" max="1023" value="716" id="speedSlider">
         </div>
     </div>
-
-    <script>
-        function move(direction) {
-            fetch('/move', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `direction=${direction}`
-            });
-        }
-
-        function adjustSpeed(value) {
-            fetch('/speed', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=set_speed&value=${value}`
-            });
-        }
-    </script>
 </body>
 </html>
