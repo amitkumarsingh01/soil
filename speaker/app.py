@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, send_file
+from flask import Flask, request, render_template, jsonify
 import sqlite3
 
 app = Flask(__name__)
@@ -46,7 +46,7 @@ def stop_recording():
 @app.route('/play', methods=['POST'])
 def play_audio():
     audio_data = get_last_audio()
-    return send_file(audio_data, mimetype='audio/wav')
+    return audio_data if audio_data else '', 200
 
 if __name__ == '__main__':
     init_db()
