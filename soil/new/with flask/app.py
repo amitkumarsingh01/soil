@@ -13,7 +13,7 @@ from email import encoders
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 sender_email = 'aksmlibts@gmail.com'
-receiver_email = 'aksdsce@gmail.com'
+receiver_email = 'sujithclasher@gmail.com'
 password = 'obzbhhkluaivnziu'
 
 # Function to send email alert
@@ -50,7 +50,7 @@ def send_excel_file(file_path):
 
 # Function to fetch data from the ESP32 (modify the URL as needed)
 def fetch_sensor_data():
-    response = requests.get('http://192.168.150.82/data')
+    response = requests.get('http://192.168.150.83/data')
     if response.status_code == 200:
         data = response.json()
         return data['sensor1'], data['sensor2'], data['sensor3'], data['average']
@@ -61,7 +61,6 @@ def fetch_sensor_data():
 def create_excel_workbook():
     workbook = xlsxwriter.Workbook('sensor_data.xlsx')
     worksheet = workbook.add_worksheet()
-    # Write the header
     worksheet.write('A1', 'Timestamp')
     worksheet.write('B1', 'Sensor 1')
     worksheet.write('C1', 'Sensor 2')
@@ -72,12 +71,10 @@ def create_excel_workbook():
 workbook, worksheet = create_excel_workbook()
 row = 1
 
-# Fetch and log data every minute, send the Excel file every 2 minutes
 start_time = time.time()
 while True:
     sensor1, sensor2, sensor3, average = fetch_sensor_data()
     if sensor1 is not None:
-        # Log data
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         worksheet.write(row, 0, timestamp)
         worksheet.write(row, 1, sensor1)
@@ -86,7 +83,6 @@ while True:
         worksheet.write(row, 4, average)
         row += 1
 
-        # Check if any sensor value is below 40% and send an email
         if sensor1 < 40:
             send_email_alert(1)
         if sensor2 < 40:
@@ -96,10 +92,10 @@ while True:
 
     time.sleep(60)
 
-    if time.time() - start_time >= 120:
+    if time.time() - start_time >= 60:
         workbook.close()
         send_excel_file('sensor_data.xlsx')
-        os.remove('sensor_data.xlsx')  # Remove the old file to avoid conflicts
+        os.remove('sensor_data.xlsx')
         workbook, worksheet = create_excel_workbook()
         start_time = time.time()
         row = 1

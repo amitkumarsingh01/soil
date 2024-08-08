@@ -18,18 +18,11 @@ while not wlan.isconnected():
 print("Network connected:", wlan.ifconfig())
 
 # Define the GPIO pins connected to the sensors and buzzer
-sensor_pins = [machine.ADC(28), machine.ADC(27), machine.ADC(26)]  # Example GPIO pins
-buzzer = machine.Pin(11, machine.Pin.OUT)  # Buzzer connected to GPIO 11
+sensor_pins = [machine.ADC(28), machine.ADC(27), machine.ADC(26)] 
 
 def read_sensors():
     values = [sensor.read_u16() for sensor in sensor_pins]
     percentages = [100 - (value / 65535 * 100) for value in values]  # Calculate percentage
-    
-    # Check if any sensor value is less than 40%
-    if any(value < 40 for value in percentages):
-        buzzer.on()  # Turn on the buzzer
-    else:
-        buzzer.off()  # Turn off the buzzer
     
     return percentages
 
@@ -156,4 +149,5 @@ async def main():
     await server.wait_closed()
 
 asyncio.run(main())
+
 

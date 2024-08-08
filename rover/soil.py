@@ -6,9 +6,9 @@ from machine import ADC, Pin
 # WiFi credentials
 SSID = 'Project'
 PASSWORD = '12345678'
-
+# API key
 # ThingSpeak credentials
-THINGSPEAK_API_KEY = 'your_THINGSPEAK_API_KEY'
+THINGSPEAK_API_KEY = 'YOUR_THINKSPEAK_URL'
 THINGSPEAK_URL = 'http://api.thingspeak.com/update'
 
 # Soil moisture sensor pin
