@@ -22,7 +22,7 @@ while not wlan.isconnected():
 print("Network connected:", wlan.ifconfig())
 
 # Sensor setup (from soil.py)
-sensor_pins = [ADC(28), ADC(27), ADC(26)]
+sensor_pins = [ADC(28)]
 
 def read_sensors():
     values = [sensor.read_u16() for sensor in sensor_pins]
@@ -72,9 +72,6 @@ html = """<!DOCTYPE html>
         <tr>
             <th>Timestamp</th>
             <th>Sensor 1</th>
-            <th>Sensor 2</th>
-            <th>Sensor 3</th>
-            <th>Average</th>
         </tr>
     </table>
 
@@ -88,16 +85,10 @@ html = """<!DOCTYPE html>
                 const row = table.insertRow();
                 const timestampCell = row.insertCell(0);
                 const sensor1Cell = row.insertCell(1);
-                const sensor2Cell = row.insertCell(2);
-                const sensor3Cell = row.insertCell(3);
-                const averageCell = row.insertCell(4);
                 
                 const timestamp = new Date().toLocaleString();
                 timestampCell.textContent = timestamp;
                 sensor1Cell.textContent = data.sensor1.toFixed(2) + '%';
-                sensor2Cell.textContent = data.sensor2.toFixed(2) + '%';
-                sensor3Cell.textContent = data.sensor3.toFixed(2) + '%';
-                averageCell.textContent = data.average.toFixed(2) + '%';
             } catch (error) {
                 console.error('Error fetching sensor data:', error);
             }
@@ -124,9 +115,6 @@ async def handle_client(reader, writer):
 
         response_data = {
             "sensor1": sensor_data[0],
-            "sensor2": sensor_data[1],
-            "sensor3": sensor_data[2],
-            "average": avg_value
         }
 
         response = json.dumps(response_data)
