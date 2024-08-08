@@ -73,9 +73,15 @@ html = """<!DOCTYPE html>
 </head>
 <body>
     <h1>Sensor Data</h1>
+    
+    <button id="downloadButton" onclick="downloadCSV()">Download Data</button>
+    <br>
+    <br>
+    <br>
     <table id="sensorTable">
         <tr>
-            <th>Timestamp</th>
+            <th>Date</th>
+            <th>Time</th>
             <th>Sensor 1</th>
             <th>Sensor 2</th>
             <th>Sensor 3</th>
@@ -83,7 +89,7 @@ html = """<!DOCTYPE html>
         </tr>
     </table>
 
-    <button id="downloadButton" onclick="downloadCSV()">Download Data</button>
+
 
     <script>
         async function fetchData() {
@@ -96,14 +102,19 @@ html = """<!DOCTYPE html>
                 
                 const table = document.getElementById('sensorTable');
                 const row = table.insertRow();
-                const timestampCell = row.insertCell(0);
-                const sensor1Cell = row.insertCell(1);
-                const sensor2Cell = row.insertCell(2);
-                const sensor3Cell = row.insertCell(3);
-                const averageCell = row.insertCell(4);
+                const dateCell = row.insertCell(0);
+                const timeCell = row.insertCell(1);
+                const sensor1Cell = row.insertCell(2);
+                const sensor2Cell = row.insertCell(3);
+                const sensor3Cell = row.insertCell(4);
+                const averageCell = row.insertCell(5);
                 
-                const timestamp = new Date().toLocaleString();
-                timestampCell.textContent = timestamp;
+                const now = new Date();
+                const date = now.toLocaleDateString();
+                const time = now.toLocaleTimeString();
+                
+                dateCell.textContent = date;
+                timeCell.textContent = time;
                 sensor1Cell.textContent = data.sensor1.toFixed(2) + '%';
                 sensor2Cell.textContent = data.sensor2.toFixed(2) + '%';
                 sensor3Cell.textContent = data.sensor3.toFixed(2) + '%';
@@ -112,6 +123,7 @@ html = """<!DOCTYPE html>
                 console.error('Error fetching sensor data:', error);
             }
         }
+
 
         function downloadCSV() {
             const table = document.getElementById('sensorTable');
