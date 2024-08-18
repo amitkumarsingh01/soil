@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Control Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .speed-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vehicle Control</h1>
+        <button onclick="sendCommand('/forward')">Move Forward</button>
+        <button onclick="sendCommand('/backward')">Move Backward</button>
+        <button onclick="sendCommand('/left')">Turn Left</button>
+        <button onclick="sendCommand('/right')">Turn Right</button>
+        <button onclick="sendCommand('/stop')">Stop</button>
+
+        <div class="speed-controls">
+            <button onclick="sendCommand('/decrease_speed')">- Speed</button>
+            <button onclick="sendCommand('/increase_speed')">+ Speed</button>
+        </div>
+    </div>
+
+    <script>
+        function sendCommand(route) {
+            fetch(route, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => console.log(data.status))
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
